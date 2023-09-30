@@ -26,8 +26,9 @@ class Post(models.Model):
         upload_to='posts/', null=True, blank=True
     )
     group = models.ForeignKey(
-        Group, on_delete=models.CASCADE,
-        related_name='groups'
+        Group, on_delete=models.SET_NULL,
+        related_name='groups', blank=True,
+        null=True
     )
 
     def __str__(self):
@@ -54,7 +55,7 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='follow'
     )
@@ -63,3 +64,16 @@ class Follow(models.Model):
         related_name='followers'
     )
 
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    "user",
+                    "following",
+                ),
+                name="unique_follow",
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user.username} follows {self.following.username}'
