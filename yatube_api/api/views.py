@@ -4,7 +4,6 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import filters
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from django_filters.rest_framework import DjangoFilterBackend
 
 from posts.models import Post, Group, Follow
 from .serializers import (
@@ -54,7 +53,7 @@ class FollowViewSet(
 ):
     serializer_class = FollowSerializer
     filter_backends = (
-        DjangoFilterBackend, filters.SearchFilter,
+        filters.SearchFilter,
         filters.OrderingFilter
     )
     search_fields = ('following__username',)
